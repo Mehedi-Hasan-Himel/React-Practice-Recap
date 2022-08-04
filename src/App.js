@@ -1,10 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   return (
     <div className="App">
+      <LoadPosts></LoadPosts>
       <District name="Noakhali" special="Bibhag"></District>
       <District name="BrammanBaria" special="fighter"></District>
       <District name="Kumilla" special="Moynamoti"></District>
@@ -12,6 +13,37 @@ function App() {
   );
 }
 
+function LoadPosts() {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => res.json())
+      .then((data) => setPosts(data));
+  }, []);
+  return (
+    <div>
+      <h1>Posts:{posts.length} </h1>
+      {posts.map((post) => (
+        <Post title={post.title} body={post.body}></Post>
+      ))}
+    </div>
+  );
+}
+
+function Post(Props) {
+  return (
+    <div
+      style={{
+        backgroundColor: "lightgray",
+        margin: "20px",
+        border: "2px solid lightsalmon",
+      }}
+    >
+      <h2>Title: {Props.title} </h2>
+      <p>Body: {Props.body} </p>
+    </div>
+  );
+}
 const districtStyle = {
   backgroundColor: `lightblue`,
   margin: `20px`,
@@ -23,7 +55,7 @@ function District(props) {
   const [power, setPower] = useState(1);
   const boostPower = () => {
     const newPower = power * 2;
-    setPower(newPower)
+    setPower(newPower);
   };
   return (
     <div style={districtStyle}>
